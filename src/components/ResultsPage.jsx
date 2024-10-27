@@ -53,6 +53,10 @@ const styles = {
     marginBottom: "20px",
   },
   resultsContainer: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
     maxWidth: "600px",
     width: "90%",
     backgroundColor: "#333",

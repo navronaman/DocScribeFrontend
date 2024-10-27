@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { uploadFile } from '../utils/Api'; // Replace with your actual API function
 import LoadingOverlay from './LoadingOverlay'; // Make sure this component is correctly set up
 import DropdownList from './dropdownList';
+import logo from './DocScribe logo.png'
 
 const LandingPage = () => {
   const fileInputRef = useRef(null);
@@ -32,22 +33,28 @@ const LandingPage = () => {
   };
 
   const handleUpload = async () => {
-    if (file) {
+    if (file && selectReportType) {
+      console.log('Uploading file:', file.name);
+      console.log('Report Type:', selectReportType);
       setLoading(true);
       try {
         // Call your API function to upload the file
-        const response = await uploadFile(file); 
-        const { extracted_text, output_pdf_url } = response; // Assuming the backend response contains these fields
+        const response = await uploadFile(file, selectReportType); 
+        const { gpt_analysis_text, output_pdf_url } = response; // Assuming the backend response contains these fields
 
         // Navigate to ResultsPage and pass the response data
         navigate('/results', { state: { data: { gpt_analysis_text, output_pdf_url } } });
         
         setLoading(false);
         setFile(null); // Clear file after upload
+        setReportType("");
       } catch (error) {
         console.error('Error uploading file:', error);
         setLoading(false);
       }
+    }
+    else if  (!selectReportType){
+      alert("Please select a report type");
     }
   };
 // const handleUpload = async () => {
@@ -82,11 +89,15 @@ const LandingPage = () => {
 
   return (
     <div style={styles.container}>
+      <div style={styles.imageContainer}>
+        <img src={logo} alt="Logo" style={styles.centeredImage} />
+        <p style={styles.tagline}>To increase the time doctors can spend with the patient.</p>
+        </div>
+        <h1 style={styles.heading}>Upload File</h1>
       <DropdownList 
         value={selectReportType} 
         onChange={(e) => setReportType(e.target.value)}
       />
-      <h1 style={styles.heading}>Upload File</h1>
 
       {loading && <LoadingOverlay message="Uploading..." />}
 
@@ -138,6 +149,26 @@ const styles = {
     padding: '20px',
     boxSizing: 'border-box',
   },
+  imageContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    marginBottom: '40px', // Adjust spacing below the image container
+  },
+centeredImage: {
+  display: 'flex',
+justifyContent: 'center',
+alignItems: 'center',
+marginBottom: '0px',
+width: '700x', 
+height: '400px', 
+  },
+tagline: {
+  fontSize: '1.69rem',
+  color: '#888',
+  textAlign: 'center',
+  marginTop: '5px', // Adjusts space above the tagline
+  },
   heading: {
     fontSize: '2rem',
     marginBottom: '20px',
@@ -184,7 +215,7 @@ const styles = {
     width: '90%',
     maxWidth: '600px',
     padding: '15px',
-    borderRadius: '50px',
+    borderRadius: '0px',
     backgroundColor: '#333',
     boxSizing: 'border-box',
   },
