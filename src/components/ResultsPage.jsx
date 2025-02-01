@@ -1,6 +1,7 @@
 // src/components/ResultsPage.jsx
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import ReactMarkdown from "react-markdown";
 
 const ResultsPage = () => {
   const location = useLocation();
@@ -8,7 +9,7 @@ const ResultsPage = () => {
 
   // Retrieve data from state or use default mock data if none is provided
   const data = location.state?.data || {
-    gpt_analysis_text: "Sample extracted text from PDF analysis.",
+    gpt_analysis_text: "Sample AI insights from PDF analysis.",
     output_pdf_url: "https://example.com/sample_report.pdf",
   };
 
@@ -21,8 +22,11 @@ const ResultsPage = () => {
       <h1 style={styles.heading}>Results</h1>
 
       <div style={styles.resultsContainer}>
-        <h2 style={styles.subheading}>Extracted Text:</h2>
-        <pre style={styles.textDisplay}>{data.gpt_analysis_text}</pre>
+        <h2 style={styles.subheading}>Report Summary:</h2>
+        <ReactMarkdown style={styles.textDisplay}>
+          {data.gpt_analysis_text}
+        </ReactMarkdown> 
+        {/* <pre style={styles.textDisplay}>{data.gpt_analysis_text}</pre> */}
         
         <a href={data.output_pdf_url} style={styles.downloadLink} target="_blank" rel="noopener noreferrer">
           Download Report PDF
@@ -47,6 +51,7 @@ const styles = {
     color: "#ffffff",
     backgroundColor: "#1a1a1a",
     minHeight: "100vh",
+    // textAlign: "center",
   },
   heading: {
     fontSize: "2.5rem",
